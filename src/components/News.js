@@ -12,8 +12,7 @@ export default class News extends Component {
         source: {
             id: null,
             name: null
-        },
-        articles: []
+        }
     }
     static propTypes = {
         country: PropTypes.string,
@@ -34,12 +33,12 @@ export default class News extends Component {
         }
         document.title = `${this.props.category === 'general' ? "News Monkey" : this.capitalizeFirstLetter(this.props.category) + "- News Monkey"}`;
     }
-    async updateNews() {
+    updateNews = async () => {
         const api = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`;
         let data = await fetch(api);
         let parsedData = await data.json();
         this.setState({
-            articles: this.state.articles.concat(parsedData.articles),
+            articles: parsedData.articles,
             loader: false,
             totalResults: parsedData.totalResults,
         })
@@ -47,25 +46,17 @@ export default class News extends Component {
     async componentDidMount() {
         this.updateNews();
     }
-    handlePrevClick = async () => {
-        this.setState({
-            page: this.state.page - 1,
-            loader: true
-        })
-        this.updateNews();
-    }
-    handleNextClick = async () => {
-        this.setState({
-            page: this.state.page + 1,
-            loader: true
-        })
-        this.updateNews();
-    }
     fetchMoreData = async () => {
-        this.setState({
-            page: this.state.page + 1,
-        })
-        this.updateNews();
+        this.setState({ page: this.state.page + 1 }, async () => {
+            const api = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`;
+            let data = await fetch(api);
+            let parsedData = await data.json();
+            this.setState({
+                articles: this.state.articles.concat(parsedData.articles),
+                loader: false,
+                totalResults: parsedData.totalResults,
+            })
+        });
     };
     render() {
         return (
@@ -73,7 +64,6 @@ export default class News extends Component {
                 <h2 className="text-center mt-3 mb-5">
                     News Monkey - Top {this.props.category === 'general' ? "" : this.capitalizeFirstLetter(this.props.category)} Headlines
                 </h2>
-                {/* {this.state.loader && <Spinner />} */}
                 <InfiniteScroll
                     dataLength={this.state.articles.length}
                     next={this.fetchMoreData}
@@ -81,16 +71,7 @@ export default class News extends Component {
                     loader={<Spinner />}
                 >
                     <div className="container">
-
                         <div className="row">
-                            {/* {!this.state.loader && this.state.articles.map((element) => {
-                            return <div key={element.url} className="col-md-4">
-                            <NewsItem title={element.title} description={element.description}
-                            url={element.url} urlToImage={element.urlToImage}
-                            author={element.author} publishedAt={element.publishedAt} source={element.source} />
-                            </div>
-                        })} */}
-
                             {this.state.articles.map((element) => {
                                 return <div key={element.url} className="col-md-4">
                                     <NewsItem title={element.title} description={element.description}
@@ -101,10 +82,6 @@ export default class News extends Component {
                         </div>
                     </div>
                 </InfiniteScroll>
-                {/* <div className="container my-4 d-flex justify-content-between">
-                    <button disabled={this.state.page <= 1} onClick={this.handlePrevClick} type="button" className="btn btn-dark">&larr; Previous</button>
-                    <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)} onClick={this.handleNextClick} type="button" className="btn btn-dark">Next &rarr;</button>
-                </div> */}
             </>
         )
     }
