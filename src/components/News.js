@@ -20,7 +20,7 @@ export default class News extends Component {
         pageSize: PropTypes.number,
         source: PropTypes.object
     }
-    apiKey = process.env.REACT_APP_NEWS_API
+    apiKey = process.env.REACT_APP_NEWS_API2
     capitalizeFirstLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -34,14 +34,18 @@ export default class News extends Component {
         document.title = `${this.props.category === 'general' ? "News Monkey" : this.capitalizeFirstLetter(this.props.category) + "- News Monkey"}`;
     }
     updateNews = async () => {
+        this.props.setProgress(0);
         const api = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`;
         let data = await fetch(api);
+        this.props.setProgress(40);
         let parsedData = await data.json();
+        this.props.setProgress(70);
         this.setState({
             articles: parsedData.articles,
             loader: false,
             totalResults: parsedData.totalResults,
         })
+        this.props.setProgress(100);
     }
     async componentDidMount() {
         this.updateNews();
