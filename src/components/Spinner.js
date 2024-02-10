@@ -4,7 +4,7 @@ export default class Spinner extends Component {
     render() {
         return (
             <div>
-                <img src={Loader} alt="Spinner" style={{height:'200px'}}/>
+                <img className='my-4' src={Loader} alt="Spinner" style={{ height: '200px' }} />
             </div>
         )
     }
