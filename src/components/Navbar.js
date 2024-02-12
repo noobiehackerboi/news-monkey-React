@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 
-const Navbar = () => {
+const Navbar = (props) => {
     return (
         <div>
-            <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+            <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary" data-bs-theme={props.mode}>
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">News Monkey</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +19,10 @@ const Navbar = () => {
                             <li className="nav-item"><Link className="nav-link" aria-current="page" to="/sports">Sports</Link></li>
                             <li className="nav-item"><Link className="nav-link" aria-current="page" to="/technology">Technology</Link></li>
                         </ul>
+                    </div>
+                    <div className="form-check form-switch">
+                        <input onClick={props.toggleMode} className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
+                        <label className="form-check-label" htmlFor="flexSwitchCheckChecked" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Dark Mode</label>
                     </div>
                 </div>
             </nav>
