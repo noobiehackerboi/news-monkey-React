@@ -48,27 +48,27 @@ const News = (props) => {
         <>
             <div style={{
                 minHeight: '100vh',
-                backgroundColor: props.mode == 'dark' ? '#272727' : 'white',
-                color: props.mode == 'dark' ? 'white' : 'black'
+                backgroundColor: props.mode === 'dark' ? '#272727' : 'white',
+                color: props.mode === 'dark' ? 'white' : 'black'
             }} data-bs-theme={props.mode}>
 
-                <h2 className="text-center mb-5" style={{ paddingTop: '80px' }}>
+                <h2 className="text-center mb-3" style={{ paddingTop: '80px' }}>
                     News Monkey - Top {props.category === 'general' ? "" : capitalizeFirstLetter(props.category)} Headlines
                 </h2>
 
                 {loader && <Spinner />}
 
                 <InfiniteScroll
-                    dataLength={articles.length}
+                    dataLength={totalResults === 0 ? 0 : articles.length}
                     next={fetchMoreData}
-                    hasMore={articles.length !== totalResults}
+                    hasMore={totalResults !== (totalResults === 0 ? 0 : articles.length)}
                     loader={<Spinner />}
                 >
                     <div className="container">
                         <div className="row">
                             {articles.map((element) => {
                                 return <div key={element.url} className="col-md-4">
-                                    <NewsItem title={element.title} description={element.description}
+                                    <NewsItem mode={props.mode} title={element.title ? element.title : ""} description={element.description}
                                         url={element.url} urlToImage={element.urlToImage}
                                         author={element.author} publishedAt={element.publishedAt} source={element.source} />
                                 </div>

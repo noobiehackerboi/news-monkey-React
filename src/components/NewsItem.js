@@ -11,9 +11,9 @@ const NewsItem = (props) => {
                 </div>
                 <img src={urlToImage ? urlToImage : defaultImage} className="card-img-top" alt="..." />
                 <div className="card-body">
-                    <h5 className="card-title">{title}
+                    <h5 className="card-title">{title ? title : ""}
                     </h5>
-                    <p className="card-text">{description}</p>
+                    <p className="card-text">{description ? description : ""}</p>
                     <p className="card-text">
                         <small className="text-body-secondary">
                             By&nbsp;
@@ -24,7 +24,7 @@ const NewsItem = (props) => {
                             </strong>
                         </small>
                     </p>
-                    <a href={url} target='_blank' rel="noreferrer" className="btn btn-sm btn-dark">Read More</a>
+                    <a href={url} target='_blank' rel="noreferrer" className={`btn btn-sm btn-${props.mode === 'light' ? 'dark' : 'secondary'}`}>Read More</a>
                 </div>
             </div>
         </div>
